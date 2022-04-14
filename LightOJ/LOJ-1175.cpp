@@ -1,0 +1,129 @@
+#include "bits/stdc++.h"
+using namespace std;
+//#define ONLINE_JUDGE
+void __print(int x) {cerr << x;}
+void __print(long x) {cerr << x;}
+void __print(long long x) {cerr << x;}
+void __print(unsigned x) {cerr << x;}
+void __print(unsigned long x) {cerr << x;}
+void __print(unsigned long long x) {cerr << x;}
+void __print(float x) {cerr << x;}
+void __print(double x) {cerr << x;}
+void __print(long double x) {cerr << x;}
+void __print(char x) {cerr << '\'' << x << '\'';}
+void __print(const char *x) {cerr << '\"' << x << '\"';}
+void __print(const string &x) {cerr << '\"' << x << '\"';}
+void __print(bool x) {cerr << (x ? "true" : "false");}
+
+template<typename T, typename V>
+void __print(const pair<T, V> &x) {cerr << '{'; __print(x.first); cerr << ','; __print(x.second); cerr << '}';}
+template<typename T>
+void __print(const T &x) {int f = 0; cerr << '{'; for (auto &i: x) cerr << (f++ ? "," : ""), __print(i); cerr << "}";}
+void _print() {cerr << "]\n";}
+template <typename T, typename... V>
+void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v...);}
+#ifndef ONLINE_JUDGE
+#define debug(x...) cerr << "[" << #x << "] = ["; _print(x)
+#else
+#define debug(x...)
+#endif
+
+#define all(x) (x).begin(),(x).end()
+#define rall(x) (x).rbegin(),(x).rend()
+#define f first
+#define s second
+#define vi vector<int>
+#define pb push_back
+#define pii pair<int,int>
+#define ll long long
+#define Checkbit(a,i) (((a)>>(i))&1)
+#define Setbit(a,i) ((a)^=1LL<<(i))
+#define space " "
+#define nline "\n"
+
+const int mod = 1e9 + 7;
+
+const int N = 3e5 + 4;
+
+
+
+void solve()
+{
+    int r, c;
+    cin >> r >> c;
+    string a[r];
+    for (int i = 0; i < r; i++) {
+        cin >> a[i];
+    }
+    queue<pii> q;
+
+    vector<vi> vis(r, vi(c,0)), dist(r, vi(c, 0)), fire(r, vi(c, 0));
+
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            if (a[i][j] == 'F') {
+                q.push({i, j});
+                vis[i][j]++;
+                dist[i][j] = -1;
+            }
+        }
+    }
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            if (a[i][j] == 'J') {
+                q.push({i, j});
+                vis[i][j]++;
+                dist[i][j] = 1;
+            }
+        }
+    }
+
+    while (q.size()) {
+        auto [x, y] = q.front();
+        q.pop();
+
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (abs(i) == abs(j)) continue;
+                int dx = x + i;
+                int dy = y + j;
+                if (dx >= 0 && dx < r && dy >= 0 && dy < c && a[dx][dy] == '.' && !vis[dx][dy]) {
+                    vis[dx][dy]++;
+                    q.push({dx, dy});
+                    if (dist[x][y] == 0 && a[x][y] == 'J' || dist[x][y] > 0)
+                        dist[dx][dy] = dist[x][y] + 1;
+                    else dist[dx][dy] = dist[x][y] - 1;
+                }
+            }
+        }
+    }
+    // debug(dist);
+    int ans = 1e8;
+    for (int i = 0; i < r; i++) {
+        if (dist[i][c - 1] > 0) ans = min(ans, dist[i][c - 1]);
+        if (dist[i][0] > 0) ans = min(ans, dist[i][0]);
+    }
+    for (int i = 0; i < c; i++) {
+        if (dist[0][i] > 0) ans = min(ans, dist[0][i]);
+        if (dist[r - 1][i] > 0) ans = min(ans, dist[r - 1][i]);
+    }
+    if (ans == 1e8) {
+        cout << "IMPOSSIBLE" << nline;
+        return;
+    }
+    cout << ans << nline;
+}
+
+signed main()
+{
+    // freopen("input.txt", "r", stdin);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int t = 1;
+    cin >> t;
+    int cs = 1;
+    while (t--) {
+        cout << "Case " << cs++ << ":" << " ";
+        solve();
+    }
+}
