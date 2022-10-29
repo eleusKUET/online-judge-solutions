@@ -68,7 +68,7 @@ void solve()
         cin >> m;
         vector<vector<int>> dp(n, vector<int>(n, mod));
         vector<pair<int,pii>> edges;
-        vpi g[n];
+        // vpi g[n];
         for (int i = 0; i < m; i++) {
             int u, v, w;
             cin >> u >> v >> w;
